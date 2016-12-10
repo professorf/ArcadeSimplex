@@ -4,7 +4,7 @@
 <script src="babylon.max.js"></script>
 <script>
 window.addEventListener("DOMContentLoaded", init);
-window.addEventListener("keydown", herocontrol);
+// window.addEventListener("keydown", herocontrol); // moved to AFTER ohero.move()
 function init()
 {
     canvas=document.getElementById("cvGame");
@@ -16,18 +16,8 @@ function init()
     ground.material = new BABYLON.StandardMaterial("gMat", scene);
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
-    hero = BABYLON.MeshBuilder.CreateCylinder("cHero", {height:10,diameterBottom:10,diameterTop:0}, scene);
-    hero.material=new BABYLON.StandardMaterial("mHero", scene);
-    hero.material.diffuseColor=new BABYLON.Color3(0,0,1);
-    hero.position=new BABYLON.Vector3(-20, 5, 0);
-    hero.rotation.z=-Math.PI/2;
-    herodx=herodz=0;
-    herospd=1;
-    herorotspd=5;
-    herohit=herodead=false;
-    hero.computeWorldMatrix(true);
-
-    mons = new omons(hero);
+    hero = new ohero();
+    mons = new omons(hero.mesh); // now mesh, since hero is an object
     boom = new oboom(mons.mesh);
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
@@ -43,45 +33,10 @@ function gameloop()
     }
     scene.render();
 }
+
 function herocontrol(event)
 {
-    switch (event.key) {
-        case 'a':
-            hero.rotation.y-=Math.PI/180*herorotspd; 
-        break;
-        case 'd':
-            hero.rotation.y+=Math.PI/180*herorotspd; 
-        break;
-        case 'w':
-            heroang=-hero.rotation.y;
-            herospd=1;
-            herodx=Math.cos(heroang); 
-            herodz=Math.sin(heroang); 
-            hero.position.x+=herodx*herospd; 
-            hero.position.z+=herodz*herospd; 
-        break;
-        case 's':
-            heroang=-hero.rotation.y;
-            herospd=1;
-            herodx=Math.cos(heroang); 
-            herodz=Math.sin(heroang); 
-            hero.position.x-=herodx*herospd; 
-            hero.position.z-=herodz*herospd; 
-        break;
-        case 't':
-            camera.position.y=200;
-            camera.position.x=camera.position.z=0;
-            camera.rotation.x=Math.PI/2;
-        break;
-        case 'Enter':
-            boom.mesh.position.x = hero.position.x;
-            boom.mesh.position.z = hero.position.z;
-            boom.mesh.rotation.y = hero.rotation.y;
-            boom.ang=-boom.mesh.rotation.y;
-            boom.dx=Math.cos(boom.ang); 
-            boom.dz=Math.sin(boom.ang); 
-        break;
-    }
+    // all moved to ohero.move this function can be deleted now
 }
 
 omons=function(hm) { // hero's MESH as input
@@ -141,6 +96,64 @@ oboom = function (mm) { // pass the monster mesh
 
     this.draw = function () {
     // for future enchancements
+    }
+}
+
+ohero = function () {
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cHero", { height: 10, diameterBottom: 10, diameterTop: 0 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mHero", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    this.mesh.position = new BABYLON.Vector3(-20, 5, 0);
+    this.mesh.rotation.z = -Math.PI / 2;
+    this.dx = herodz = 0;
+    this.spd = 1;
+    this.rotspd = 5;
+    this.hit = herodead = false;
+    this.mesh.computeWorldMatrix(true);
+
+    this.move = function (event) {
+        switch (event.key) {
+            case 'a':
+                this.mesh.rotation.y -= Math.PI / 180 * this.rotspd;
+                break;
+            case 'd':
+                this.mesh.rotation.y += Math.PI / 180 * this.rotspd;
+                break;
+            case 'w':
+                this.ang = -this.mesh.rotation.y;
+                this.spd = 1;
+                this.dx = Math.cos(this.ang);
+                this.dz = Math.sin(this.ang);
+                this.mesh.position.x += this.dx * this.spd;
+                this.mesh.position.z += this.dz * this.spd;
+                break;
+            case 's':
+                this.ang = -this.mesh.rotation.y;
+                this.spd = 1;
+                this.dx = Math.cos(this.ang);
+                this.dz = Math.sin(this.ang);
+                this.mesh.position.x -= this.dx * this.spd;
+                this.mesh.position.z -= this.dz * this.spd;
+                break;
+            case 't':
+                camera.position.y = 200;
+                camera.position.x = camera.position.z = 0;
+                camera.rotation.x = Math.PI / 2;
+                break;
+            case 'Enter':
+                boom.mesh.position.x = this.mesh.position.x;
+                boom.mesh.position.z = this.mesh.position.z;
+                boom.mesh.rotation.y = this.mesh.rotation.y;
+                boom.ang = -boom.mesh.rotation.y;
+                boom.dx = Math.cos(boom.ang);
+                boom.dz = Math.sin(boom.ang);
+                break;
+        }
+    }
+
+    window.addEventListener("keydown", this.move.bind(this)); // this is magic
+
+    this.draw = function () {
     }
 }
 </script>
