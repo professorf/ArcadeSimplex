@@ -33,6 +33,7 @@ function init()
     boom.material.diffuseColor=new BABYLON.Color3(1,.5,0);
     boom.position=new BABYLON.Vector3(0,5,20);
     boom.rotation.z=-Math.PI/2;
+    boomdx=boomdz=0;
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -48,6 +49,8 @@ function gameloop()
     mons.position.z+=Math.sin(monsang)*monsspd;
     mons.rotation.y=-monsang;
 
+    boom.position.x+=boomdx;
+    boom.position.z+=boomdz;
     scene.render();
 }
 function herocontrol(event)
@@ -79,6 +82,15 @@ function herocontrol(event)
             camera.position.y=200;
             camera.position.x=camera.position.z=0;
             camera.rotation.x=Math.PI/2;
+        break;
+        case 'Enter':
+            boom.position.x=hero.position.x;
+            boom.position.z=hero.position.z;
+            boom.rotation.y=hero.rotation.y;
+            boomang=-boom.rotation.y;
+            boomspd=1;
+            boomdx=Math.cos(boomang)*boomspd;
+            boomdz=Math.sin(boomang)*boomspd;
         break;
     }
 }
