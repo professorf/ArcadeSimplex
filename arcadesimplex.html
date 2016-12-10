@@ -3,12 +3,40 @@
 <head>
 <script src="babylon.max.js"></script>
 <script>
+/*
+ * Copyright (c) Nick V. Flor, 2014-2017, All rights reserved
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * If you use this code for research, you must cite me in your paper references.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * This material is based partly upon work supported by the National Science Foundation (NSF)
+ * under both ECCS - 1231046 and CMMI - 1635334. Any opinions, findings, and conclusions or 
+ * recommendations expressed in this material are those of the author and do not necessarily
+ * reflect the views of the NSF.
+ */
+</script>
+<script>
 window.addEventListener("DOMContentLoaded", init);
 
-var things; // This will be a global array of all objects (things) in our game
+var things;
+//
+// INITIALIZATION
+//
 function init()
 {
-    things = new Array(); // creat an empty array
+    things = new Array();
     
     canvas=document.getElementById("cvGame");
     engine=new BABYLON.Engine(canvas);
@@ -20,24 +48,24 @@ function init()
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
     hero = new ohero(scene);
-    things.push(hero); // everytime you create an object, push it onto the list (array)
-
-    maxmons = orgmons = 3; // added orgmons to help w/ scoring 
+    things.push(hero);
+    maxmons = orgmons = 3; 
     for (i = 0; i < maxmons; i++) {
         mons = new omons(hero, scene);
         things.push(mons); // again, push any object if you want to see it
     }
-
     boom = null;
-   
-
+    
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
+
     gameover = false;
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-
+//
+// GAME LOOP
+//
 function gameloop()
 {
     if (!gameover) {
@@ -60,13 +88,10 @@ function gameloop()
     }
     scene.render();
 }
-
-function herocontrol(event)
-{
-    // all moved to ohero.move
-}
-
-omons=function(h, scene) { // hero's object as input
+//
+// OBJECTS
+//
+omons=function(h, scene) {
     this.hero = h.mesh;
     this.h = 10;
     this.maxw = this.maxd = 200;
@@ -93,29 +118,22 @@ omons=function(h, scene) { // hero's object as input
         this.mesh.rotation.y=-this.ang;
         if (this.mesh.intersectsMesh(this.hero,true)) {
             hero.hit = true;
-            //gameover = true;
-            //spWinLose.innerHTML="YOU DIED!";
         }
         if (this.hit) {
-            this.monsindex = things.indexOf(this); // find mons in list
-            things.splice(this.monsindex, 1);       // remove mons from list
+            this.monsindex = things.indexOf(this);
+            things.splice(this.monsindex, 1);     
             this.mesh.dispose();
-            maxmons = maxmons - 1; // game over condition is now here
-            //if (maxmons == 0) {
-            //    gameover = true;
-            //    spWinLose.innerHTML = "YOU WIN";
-            //}
+            maxmons = maxmons - 1; 
         }
     }
 
     this.draw = function () {
-    // for future animations
     }
 }
 
-oboom = function (m, h, scene) { // pass the monster 
-    this.mons = m.mesh; // mons is a mesh
-    this.sx = h.mesh.position.x; // starting x & z
+oboom = function (m, h, scene) {
+    this.mons = m.mesh; 
+    this.sx = h.mesh.position.x; 
     this.sz = h.mesh.position.z;
     
     this.h = 10;
@@ -135,24 +153,18 @@ oboom = function (m, h, scene) { // pass the monster
             this.mesh.position.x += this.dx * this.spd;
             this.mesh.position.z += this.dz * this.spd;
         } else {
-            this.boomindex = things.indexOf(this); // find boom in list
-            things.splice(this.boomindex, 1);       // remove from list
+            this.boomindex = things.indexOf(this); 
+            things.splice(this.boomindex, 1);      
             boom = null;
             this.mesh.dispose();
-            //    gameover = true;
-            //    spWinLose.innerHTML = "YOU WIN";            
         }
 
-        //if (this.mesh.intersectsPoint(this.mons.position)) {
-        //    gameover = true;
-        //    spWinLose.innerHTML = "YOU WIN";
-        //}
         for (this.i = 0; this.i < things.length; this.i++) {
             if ((things[this.i] instanceof omons) &&
                 this.mesh.intersectsPoint(things[this.i].mesh.position)) {
-                things[this.i].hit = true; // let the monster remove itself
-                this.boomindex = things.indexOf(this); // find boom in list
-                things.splice(this.boomindex, 1);       // remove from list
+                things[this.i].hit = true; 
+                this.boomindex = things.indexOf(this); 
+                things.splice(this.boomindex, 1);      
                 boom = null;
                 this.mesh.dispose();
             }
@@ -160,7 +172,6 @@ oboom = function (m, h, scene) { // pass the monster
     }
 
     this.draw = function () {
-    // for future enchancements
     }
 }
 
@@ -172,10 +183,10 @@ ohero = function (scene) {
     this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
     this.mesh.position = new BABYLON.Vector3(0, this.h/2, 0);
     this.mesh.rotation.z = -Math.PI / 2;
-    this.dx = herodz = 0;
+    this.dx = this.dz = 0;
     this.spd = 1;
     this.rotspd = 5;
-    this.hit = herodead = false;
+    this.hit = this.dead = false;
     this.mesh.computeWorldMatrix(true);
 
     this.move = function (event) {
