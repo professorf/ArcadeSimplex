@@ -4,9 +4,12 @@
 <script src="babylon.max.js"></script>
 <script>
 window.addEventListener("DOMContentLoaded", init);
-// window.addEventListener("keydown", herocontrol); // moved to AFTER ohero.move()
+
+var things; // This will be a global array of all objects (things) in our game
 function init()
 {
+    things = new Array(); // create an empty array
+    
     canvas=document.getElementById("cvGame");
     engine=new BABYLON.Engine(canvas);
 
@@ -17,8 +20,12 @@ function init()
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
     hero = new ohero(scene);
-    mons = new omons(hero,scene); // now mesh, since hero is an object
+    things.push(hero); // everytime you create an object, push it onto the list (array)
+    mons = new omons(hero, scene);
+    things.push(mons); // again, push any object if you want to see it
+    
     boom = null;
+   
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -28,9 +35,13 @@ function init()
 function gameloop()
 {
     if (!gameover) {
-        mons.move();
-        if (boom != null)
-            boom.move();
+        // mons.move(); // THIS CODE IS NOT NEEDED NOW THAT OBJECTS ARE IN A LIST
+        //if (boom != null)
+        //    boom.move();
+        for (i = 0; i < things.length; i++) {
+            if ((things[i] instanceof ohero)==false)
+                things[i].move();
+        }
     }
     scene.render();
 }
@@ -98,6 +109,8 @@ oboom = function (m, h, scene) { // pass the monster
             this.mesh.position.x += this.dx * this.spd;
             this.mesh.position.z += this.dz * this.spd;
         } else {
+            this.boomindex = things.indexOf(boom); // find boom in list
+            things.splice(this.boomindex, 1);       // remove from list
             boom = null;
             this.mesh.dispose();
         }
@@ -159,7 +172,7 @@ ohero = function (scene) {
             case 'Enter':
                 if (boom == null) {
                     boom = new oboom(mons, hero, scene);
-                
+                    things.push(boom);
                     boom.mesh.position.x = this.mesh.position.x;
                     boom.mesh.position.z = this.mesh.position.z;
                     boom.mesh.rotation.y = this.mesh.rotation.y;
