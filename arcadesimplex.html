@@ -21,6 +21,10 @@ function init()
     hero.material.diffuseColor=new BABYLON.Color3(0,0,1);
     hero.position=new BABYLON.Vector3(-20, 5, 0);
     hero.rotation.z=-Math.PI/2;
+    herodx=herodz=0;
+    herospd=1;
+    herorotspd=5;
+    herohit=herodead=false; // for future version
     hero.computeWorldMatrix(true);
 
     mons= BABYLON.MeshBuilder.CreateCylinder("cMons", {height:10,diameterBottom:10,diameterTop:0}, scene);
@@ -28,6 +32,10 @@ function init()
     mons.material.diffuseColor=new BABYLON.Color3(1,0,0);
     mons.position=new BABYLON.Vector3(20, 5, 0);
     mons.rotation.z=-Math.PI/2;    
+    monsdx=monsdz=0;
+    monsspd=0.05;
+    monsrotspd=1; // monsrotspd just in case
+    monshit=monsdead=false; // for future version
     mons.computeWorldMatrix(true);
 
     boom = BABYLON.MeshBuilder.CreateCylinder("cBoom", {height:10,diameterBottom:4,diameterTop:0}, scene);
@@ -36,6 +44,8 @@ function init()
     boom.position=new BABYLON.Vector3(0,5,20);
     boom.rotation.z=-Math.PI/2;
     boomdx=boomdz=0;
+    boomspd=boomrotspd=1; // boomrotspd just in case
+    boomhit=boomdead=false; // for future version
     boom.computeWorldMatrix(true);
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
@@ -48,18 +58,22 @@ function gameloop()
     if (!gameover) {
     monsdx=hero.position.x-mons.position.x;
     monsdz=hero.position.z-mons.position.z;
-    monsang=Math.atan2(monsdz,monsdx);
-    monsspd=0.05;
-    mons.position.x+=Math.cos(monsang)*monsspd;
-    mons.position.z+=Math.sin(monsang)*monsspd;
+    monsang=Math.atan2(monsdz,monsdx); 
+    // monsspd=0.05; move to init()
+    
+    monsdx=Math.cos(monsang); // added
+    monsdz=Math.sin(monsang); // added
+    mons.position.x+=monsdx*monsspd; // replaced Math.cos w/monsdx 
+    mons.position.z+=monsdz*monsspd; // replaced Math.sin w monsdz
     mons.rotation.y=-monsang;
     if (mons.intersectsMesh(hero,true)) {
         gameover=true;
         spWinLose.innerHTML="YOU DIED!";
     }
 
-    boom.position.x+=boomdx;
-    boom.position.z+=boomdz;
+    // boomspd=1; // added but init'ed at top
+    boom.position.x+=boomdx*boomspd; // added boomspd
+    boom.position.z+=boomdz*boomspd; // added boomspd
     if (boom.intersectsPoint(mons.position)) {
         gameover=true;
         spWinLose.innerHTML="YOU WIN";
@@ -71,26 +85,26 @@ function herocontrol(event)
 {
     switch (event.key) {
         case 'a':
-            hero.rotation.y-=Math.PI/180;          
+            hero.rotation.y-=Math.PI/180*herorotspd; // added *herorotspeed also set in init
         break;
         case 'd':
-            hero.rotation.y+=Math.PI/180;          
+            hero.rotation.y+=Math.PI/180*herorotspd; // added *herorotspeed also set in init
         break;
         case 'w':
             heroang=-hero.rotation.y;
             herospd=1;
-            herodx=Math.cos(heroang)*herospd;
-            herodz=Math.sin(heroang)*herospd;
-            hero.position.x+=herodx;
-            hero.position.z+=herodz;
+            herodx=Math.cos(heroang); // moved *herospd
+            herodz=Math.sin(heroang); // moved *herospd
+            hero.position.x+=herodx*herospd; // moved it here
+            hero.position.z+=herodz*herospd; // moved it here
         break;
         case 's':
             heroang=-hero.rotation.y;
             herospd=1;
-            herodx=Math.cos(heroang)*herospd;
-            herodz=Math.sin(heroang)*herospd;
-            hero.position.x-=herodx;
-            hero.position.z-=herodz;
+            herodx=Math.cos(heroang); // moved *herospd
+            herodz=Math.sin(heroang); // moved *herospd
+            hero.position.x-=herodx*herospd; // moved it here
+            hero.position.z-=herodz*herospd; // moved it here
         break;
         case 't':
             camera.position.y=200;
@@ -102,9 +116,9 @@ function herocontrol(event)
             boom.position.z=hero.position.z;
             boom.rotation.y=hero.rotation.y;
             boomang=-boom.rotation.y;
-            boomspd=1;
-            boomdx=Math.cos(boomang)*boomspd;
-            boomdz=Math.sin(boomang)*boomspd;
+            // boomspd=1; // now set in gameloop
+            boomdx=Math.cos(boomang); // *boomspd; now done in gameloop
+            boomdz=Math.sin(boomang); // *boomspd; now done in gameloop
         break;
     }
 }
