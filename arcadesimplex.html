@@ -3,6 +3,28 @@
 <head>
 <script src="babylon.max.js"></script>
 <script>
+window.addEventListener("DOMContentLoaded", init);
+function init()
+{
+    canvas=document.getElementById("cvGame");
+    engine=new BABYLON.Engine(canvas);
+
+
+    scene=new BABYLON.Scene(engine);
+    light=new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0,1,0), scene);
+    ground=BABYLON.MeshBuilder.CreateGround("mGround", {width:1000,height:1000}, scene);   
+    ground.material = new BABYLON.StandardMaterial("gMat", scene);
+    ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
+
+    camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
+    camera.attachControl(canvas);
+
+    engine.runRenderLoop(gameloop);
+}
+function gameloop()
+{
+    scene.render();
+}
 </script>
 <style>
 body    {width:100%; height:100%; padding:0; margin:0; background:red;}
