@@ -40,6 +40,14 @@ function init()
 }
 function gameloop()
 {
+    monsdx=hero.position.x-mons.position.x;
+    monsdz=hero.position.z-mons.position.z;
+    monsang=Math.atan2(monsdz,monsdx);
+    monsspd=0.05;
+    mons.position.x+=Math.cos(monsang)*monsspd;
+    mons.position.z+=Math.sin(monsang)*monsspd;
+    mons.rotation.y=-monsang;
+
     scene.render();
 }
 function herocontrol(event)
