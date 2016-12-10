@@ -4,7 +4,6 @@
 <script src="babylon.max.js"></script>
 <script>
 window.addEventListener("DOMContentLoaded", init);
-// window.addEventListener("keydown", herocontrol); // moved to AFTER ohero.move()
 function init()
 {
     canvas=document.getElementById("cvGame");
@@ -16,9 +15,9 @@ function init()
     ground.material = new BABYLON.StandardMaterial("gMat", scene);
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
-    hero = new ohero();
-    mons = new omons(hero.mesh); // now mesh, since hero is an object
-    boom = new oboom(mons.mesh);
+    hero = new ohero(scene);
+    mons = new omons(hero,scene); // now mesh, since hero is an object
+    boom = new oboom(mons,scene);
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -36,15 +35,17 @@ function gameloop()
 
 function herocontrol(event)
 {
-    // all moved to ohero.move this function can be deleted now
+    // all moved to ohero.move
 }
 
-omons=function(hm) { // hero's MESH as input
-    this.hero = hm;
-    this.mesh= BABYLON.MeshBuilder.CreateCylinder("cMons", {height:10,diameterBottom:10,diameterTop:0}, scene);
+omons=function(h, scene) { // hero's object as input
+    this.hero = h.mesh;
+    this.h = 10;
+    this.maxw = this.maxd = 200;
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cMons", { height: this.h, diameterBottom: this.h, diameterTop: 0 }, scene);
     this.mesh.material=new BABYLON.StandardMaterial("mMons", scene);
     this.mesh.material.diffuseColor=new BABYLON.Color3(1,0,0);
-    this.mesh.position=new BABYLON.Vector3(20, 5, 0);
+    this.mesh.position = new BABYLON.Vector3(Math.random()*this.maxw-this.maxw/2, this.h/2, Math.random()*this.maxd-this.maxd/2);
     this.mesh.rotation.z=-Math.PI/2;
     this.dx=this.dz=0;
     this.spd=0.05;
@@ -73,12 +74,14 @@ omons=function(hm) { // hero's MESH as input
     }
 }
 
-oboom = function (mm) { // pass the monster mesh
-    this.mons = mm; // mons is a mesh
-    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cBoom", { height: 10, diameterBottom: 4, diameterTop: 0 }, scene);
+oboom = function (m, scene) { // pass the monster 
+    this.mons = m.mesh; // mons is a mesh
+    this.h = 10;
+    this.maxw = this.maxd = 100;
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cBoom", { height: this.h, diameterBottom: this.h/2.5, diameterTop: 0 }, scene);
     this.mesh.material = new BABYLON.StandardMaterial("mBoom", scene);
     this.mesh.material.diffuseColor = new BABYLON.Color3(1, .5, 0);
-    this.mesh.position = new BABYLON.Vector3(0, 5, 20);
+    this.mesh.position = new BABYLON.Vector3(20, this.h/2, 20);
     this.mesh.rotation.z = -Math.PI / 2;
     this.dx = this.dz = 0;
     this.spd = this.rotspd = 1;
@@ -99,11 +102,13 @@ oboom = function (mm) { // pass the monster mesh
     }
 }
 
-ohero = function () {
-    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cHero", { height: 10, diameterBottom: 10, diameterTop: 0 }, scene);
+ohero = function (scene) {
+    this.h = 10;
+    this.maxw = this.maxd = 100;
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cHero", { height: this.h, diameterBottom: this.h, diameterTop: 0 }, scene);
     this.mesh.material = new BABYLON.StandardMaterial("mHero", scene);
     this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
-    this.mesh.position = new BABYLON.Vector3(-20, 5, 0);
+    this.mesh.position = new BABYLON.Vector3(0, this.h/2, 0);
     this.mesh.rotation.z = -Math.PI / 2;
     this.dx = herodz = 0;
     this.spd = 1;
