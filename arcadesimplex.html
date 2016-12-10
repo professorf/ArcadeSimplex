@@ -11,8 +11,8 @@ function init()
     engine=new BABYLON.Engine(canvas);
 
     scene=new BABYLON.Scene(engine);
-    light=new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0,1,0), scene);    
-    ground=BABYLON.MeshBuilder.CreateGround("mGround", {width:1000,height:1000}, scene);   
+    light=new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0,1,0), scene);
+    ground=BABYLON.MeshBuilder.CreateGround("mGround", {width:1000,height:1000}, scene);
     ground.material = new BABYLON.StandardMaterial("gMat", scene);
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
@@ -28,16 +28,7 @@ function init()
     hero.computeWorldMatrix(true);
 
     mons = new omons(hero);
-
-    boom = BABYLON.MeshBuilder.CreateCylinder("cBoom", {height:10,diameterBottom:4,diameterTop:0}, scene);
-    boom.material=new BABYLON.StandardMaterial("mBoom", scene);
-    boom.material.diffuseColor=new BABYLON.Color3(1,.5,0);
-    boom.position=new BABYLON.Vector3(0,5,20);
-    boom.rotation.z=-Math.PI/2;
-    boomdx=boomdz=0;
-    boomspd=boomrotspd=1; 
-    boomhit=boomdead=false; 
-    boom.computeWorldMatrix(true);
+    boom = new oboom(mons.mesh);
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -47,14 +38,8 @@ function init()
 function gameloop()
 {
     if (!gameover) {
-    mons.move();
-
-    boom.position.x+=boomdx*boomspd;
-    boom.position.z+=boomdz*boomspd;
-    if (boom.intersectsPoint(mons.mesh.position)) { 
-        gameover=true;
-        spWinLose.innerHTML="YOU WIN";
-    }
+        mons.move();
+        boom.move();
     }
     scene.render();
 }
@@ -89,12 +74,12 @@ function herocontrol(event)
             camera.rotation.x=Math.PI/2;
         break;
         case 'Enter':
-            boom.position.x=hero.position.x;
-            boom.position.z=hero.position.z;
-            boom.rotation.y=hero.rotation.y;
-            boomang=-boom.rotation.y;
-            boomdx=Math.cos(boomang); 
-            boomdz=Math.sin(boomang); 
+            boom.mesh.position.x = hero.position.x;
+            boom.mesh.position.z = hero.position.z;
+            boom.mesh.rotation.y = hero.rotation.y;
+            boom.ang=-boom.mesh.rotation.y;
+            boom.dx=Math.cos(boom.ang); 
+            boom.dz=Math.sin(boom.ang); 
         break;
     }
 }
@@ -105,29 +90,57 @@ omons=function(hm) { // hero's MESH as input
     this.mesh.material=new BABYLON.StandardMaterial("mMons", scene);
     this.mesh.material.diffuseColor=new BABYLON.Color3(1,0,0);
     this.mesh.position=new BABYLON.Vector3(20, 5, 0);
-    this.mesh.rotation.z=-Math.PI/2;    
+    this.mesh.rotation.z=-Math.PI/2;
     this.dx=this.dz=0;
     this.spd=0.05;
     this.rotspd=1;
     this.hit=this.dead=false;
     this.mesh.computeWorldMatrix(true);
-    this.move = function() {
-            this.dx=this.hero.position.x-this.mesh.position.x;
-            this.dz=this.hero.position.z-this.mesh.position.z;
-            this.ang=Math.atan2(this.dz,this.dx); 
-    
-            this.dx=Math.cos(this.ang); 
-            this.dz=Math.sin(this.ang); 
-            this.mesh.position.x+=this.dx*this.spd;  
-            this.mesh.position.z+=this.dz*this.spd; 
-            this.mesh.rotation.y=-this.ang;
-            if (this.mesh.intersectsMesh(this.hero,true)) {
-                gameover=true;
-                spWinLose.innerHTML="YOU DIED!";
-            }
+
+    this.move = function () {
+        this.dx=this.hero.position.x-this.mesh.position.x;
+        this.dz=this.hero.position.z-this.mesh.position.z;
+        this.ang=Math.atan2(this.dz,this.dx);
+
+        this.dx = Math.cos(this.ang);
+        this.dz = Math.sin(this.ang); 
+        this.mesh.position.x+=this.dx*this.spd;
+        this.mesh.position.z+=this.dz*this.spd; 
+        this.mesh.rotation.y=-this.ang;
+        if (this.mesh.intersectsMesh(this.hero,true)) {
+            gameover=true;
+            spWinLose.innerHTML="YOU DIED!";
+        }
     }
-    this.draw = function() {
-        // for future animations
+
+    this.draw = function () {
+    // for future animations
+    }
+}
+
+oboom = function (mm) { // pass the monster mesh
+    this.mons = mm; // mons is a mesh
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cBoom", { height: 10, diameterBottom: 4, diameterTop: 0 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mBoom", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, .5, 0);
+    this.mesh.position = new BABYLON.Vector3(0, 5, 20);
+    this.mesh.rotation.z = -Math.PI / 2;
+    this.dx = this.dz = 0;
+    this.spd = this.rotspd = 1;
+    this.hit = this.dead = false;
+    this.mesh.computeWorldMatrix(true);
+
+    this.move = function () {
+        this.mesh.position.x += this.dx * this.spd;
+        this.mesh.position.z += this.dz * this.spd;
+        if (this.mesh.intersectsPoint(this.mons.position)) {
+            gameover = true;
+            spWinLose.innerHTML = "YOU WIN";
+        }
+    }
+
+    this.draw = function () {
+    // for future enchancements
     }
 }
 </script>
