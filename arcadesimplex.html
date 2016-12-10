@@ -21,12 +21,14 @@ function init()
     hero.material.diffuseColor=new BABYLON.Color3(0,0,1);
     hero.position=new BABYLON.Vector3(-20, 5, 0);
     hero.rotation.z=-Math.PI/2;
+    hero.computeWorldMatrix(true);
 
     mons= BABYLON.MeshBuilder.CreateCylinder("cMons", {height:10,diameterBottom:10,diameterTop:0}, scene);
     mons.material=new BABYLON.StandardMaterial("mMons", scene);
     mons.material.diffuseColor=new BABYLON.Color3(1,0,0);
     mons.position=new BABYLON.Vector3(20, 5, 0);
-    mons.rotation.z=-Math.PI/2;   
+    mons.rotation.z=-Math.PI/2;    
+    mons.computeWorldMatrix(true);
 
     boom = BABYLON.MeshBuilder.CreateCylinder("cBoom", {height:10,diameterBottom:4,diameterTop:0}, scene);
     boom.material=new BABYLON.StandardMaterial("mBoom", scene);
@@ -34,13 +36,16 @@ function init()
     boom.position=new BABYLON.Vector3(0,5,20);
     boom.rotation.z=-Math.PI/2;
     boomdx=boomdz=0;
+    boom.computeWorldMatrix(true);
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
+    gameover=false;
     engine.runRenderLoop(gameloop);
 }
 function gameloop()
 {
+    if (!gameover) {
     monsdx=hero.position.x-mons.position.x;
     monsdz=hero.position.z-mons.position.z;
     monsang=Math.atan2(monsdz,monsdx);
@@ -48,9 +53,18 @@ function gameloop()
     mons.position.x+=Math.cos(monsang)*monsspd;
     mons.position.z+=Math.sin(monsang)*monsspd;
     mons.rotation.y=-monsang;
+    if (mons.intersectsMesh(hero,true)) {
+        gameover=true;
+        spWinLose.innerHTML="YOU DIED!";
+    }
 
     boom.position.x+=boomdx;
     boom.position.z+=boomdz;
+    if (boom.intersectsPoint(mons.position)) {
+        gameover=true;
+        spWinLose.innerHTML="YOU WIN";
+    }
+    }
     scene.render();
 }
 function herocontrol(event)
@@ -97,10 +111,11 @@ function herocontrol(event)
 </script>
 <style>
 body    {width:100%; height:100%; padding:0; margin:0; background:red;}
-#cvGame {width:100%; height:100%; padding:0; margin:0; background:skyblue;}
+#cvGame {position:absolute;width:100%; height:100%; padding:0; margin:0; background:skyblue;}
 </style>
 </head>
 <body>
 <canvas id="cvGame"></canvas>
+<span id="spWinLose" style="position:absolute;bottom:0;right:0;">SIMPLEX</span>
 </body>
 </html>
