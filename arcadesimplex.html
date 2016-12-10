@@ -22,7 +22,7 @@ function init()
     hero = new ohero(scene);
     things.push(hero); // everytime you create an object, push it onto the list (array)
 
-    maxmons = 3;
+    maxmons = orgmons = 3; // added orgmons to help w/ scoring 
     for (i = 0; i < maxmons; i++) {
         mons = new omons(hero, scene);
         things.push(mons); // again, push any object if you want to see it
@@ -33,19 +33,30 @@ function init()
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
-    gameover=false;
+    gameover = false;
+    starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
+
 function gameloop()
 {
     if (!gameover) {
-        // mons.move();
-        //if (boom != null)
-        //    boom.move();
         for (i = 0; i < things.length; i++) {
             if ((things[i] instanceof ohero)==false)
                 things[i].move();
         }
+
+        spMons.innerHTML = (orgmons-maxmons);
+        elapsed = Date.now() - starttime;
+        spTime.innerHTML = (elapsed / 1000).toFixed(2);
+
+        if (maxmons == 0 || hero.hit) {
+            gameover = true;
+            if (maxmons == 0)
+                spWinLose.innerHTML = "YOU WIN";
+            else
+                spWinLose.innerHTML = "YOU LOSE";
+        }        
     }
     scene.render();
 }
@@ -81,18 +92,19 @@ omons=function(h, scene) { // hero's object as input
         this.mesh.position.z+=this.dz*this.spd; 
         this.mesh.rotation.y=-this.ang;
         if (this.mesh.intersectsMesh(this.hero,true)) {
-            gameover=true;
-            spWinLose.innerHTML="YOU DIED!";
+            hero.hit = true;
+            //gameover = true;
+            //spWinLose.innerHTML="YOU DIED!";
         }
         if (this.hit) {
             this.monsindex = things.indexOf(this); // find mons in list
             things.splice(this.monsindex, 1);       // remove mons from list
             this.mesh.dispose();
             maxmons = maxmons - 1; // game over condition is now here
-            if (maxmons == 0) {
-                gameover = true;
-                spWinLose.innerHTML = "YOU WIN";
-            }
+            //if (maxmons == 0) {
+            //    gameover = true;
+            //    spWinLose.innerHTML = "YOU WIN";
+            //}
         }
     }
 
@@ -127,6 +139,8 @@ oboom = function (m, h, scene) { // pass the monster
             things.splice(this.boomindex, 1);       // remove from list
             boom = null;
             this.mesh.dispose();
+            //    gameover = true;
+            //    spWinLose.innerHTML = "YOU WIN";            
         }
 
         //if (this.mesh.intersectsPoint(this.mons.position)) {
@@ -217,10 +231,13 @@ ohero = function (scene) {
 <style>
 body    {width:100%; height:100%; padding:0; margin:0; background:red;}
 #cvGame {position:absolute;width:100%; height:100%; padding:0; margin:0; background:skyblue;}
+.score  {position: absolute; top: 0; right: 0; width: 100%; font:bold 24pt Arial; color:white; text-shadow:2px 2px #000000}
 </style>
 </head>
 <body>
 <canvas id="cvGame"></canvas>
-<span id="spWinLose" style="position:absolute;bottom:0;right:0;">SIMPLEX</span>
+<div id="spWinLose" class="score" style="text-align:center;">SIMPLEX</div>
+<div id="spTime" class="score" style="text-align:left;">TIME</div>
+<div id="spMons" class="score" style="text-align:right;">MONSTERS</div>
 </body>
 </html>
