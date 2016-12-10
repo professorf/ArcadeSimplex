@@ -4,6 +4,7 @@
 <script src="babylon.max.js"></script>
 <script>
 window.addEventListener("DOMContentLoaded", init);
+// window.addEventListener("keydown", herocontrol); // moved to AFTER ohero.move()
 function init()
 {
     canvas=document.getElementById("cvGame");
@@ -17,7 +18,7 @@ function init()
 
     hero = new ohero(scene);
     mons = new omons(hero,scene); // now mesh, since hero is an object
-    boom = new oboom(mons,scene);
+    boom = null;
 
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -28,7 +29,8 @@ function gameloop()
 {
     if (!gameover) {
         mons.move();
-        boom.move();
+        if (boom != null)
+            boom.move();
     }
     scene.render();
 }
@@ -45,7 +47,7 @@ omons=function(h, scene) { // hero's object as input
     this.mesh = BABYLON.MeshBuilder.CreateCylinder("cMons", { height: this.h, diameterBottom: this.h, diameterTop: 0 }, scene);
     this.mesh.material=new BABYLON.StandardMaterial("mMons", scene);
     this.mesh.material.diffuseColor=new BABYLON.Color3(1,0,0);
-    this.mesh.position = new BABYLON.Vector3(Math.random()*this.maxw-this.maxw/2, this.h/2, Math.random()*this.maxd-this.maxd/2);
+    this.mesh.position = new BABYLON.Vector3(Math.random() * this.maxw - this.maxw / 2, this.h / 2, Math.random() * this.maxd - this.maxd / 2);
     this.mesh.rotation.z=-Math.PI/2;
     this.dx=this.dz=0;
     this.spd=0.05;
@@ -74,8 +76,11 @@ omons=function(h, scene) { // hero's object as input
     }
 }
 
-oboom = function (m, scene) { // pass the monster 
+oboom = function (m, h, scene) { // pass the monster 
     this.mons = m.mesh; // mons is a mesh
+    this.sx = h.mesh.position.x; // starting x & z
+    this.sz = h.mesh.position.z;
+    
     this.h = 10;
     this.maxw = this.maxd = 100;
     this.mesh = BABYLON.MeshBuilder.CreateCylinder("cBoom", { height: this.h, diameterBottom: this.h/2.5, diameterTop: 0 }, scene);
@@ -89,8 +94,14 @@ oboom = function (m, scene) { // pass the monster
     this.mesh.computeWorldMatrix(true);
 
     this.move = function () {
-        this.mesh.position.x += this.dx * this.spd;
-        this.mesh.position.z += this.dz * this.spd;
+        if (Math.sqrt(Math.pow(this.mesh.position.x - this.sx, 2) + Math.pow(this.mesh.position.z - this.sz, 2)) < this.maxd) {
+            this.mesh.position.x += this.dx * this.spd;
+            this.mesh.position.z += this.dz * this.spd;
+        } else {
+            boom = null;
+            this.mesh.dispose();
+        }
+
         if (this.mesh.intersectsPoint(this.mons.position)) {
             gameover = true;
             spWinLose.innerHTML = "YOU WIN";
@@ -146,12 +157,16 @@ ohero = function (scene) {
                 camera.rotation.x = Math.PI / 2;
                 break;
             case 'Enter':
-                boom.mesh.position.x = this.mesh.position.x;
-                boom.mesh.position.z = this.mesh.position.z;
-                boom.mesh.rotation.y = this.mesh.rotation.y;
-                boom.ang = -boom.mesh.rotation.y;
-                boom.dx = Math.cos(boom.ang);
-                boom.dz = Math.sin(boom.ang);
+                if (boom == null) {
+                    boom = new oboom(mons, hero, scene);
+                
+                    boom.mesh.position.x = this.mesh.position.x;
+                    boom.mesh.position.z = this.mesh.position.z;
+                    boom.mesh.rotation.y = this.mesh.rotation.y;
+                    boom.ang = -boom.mesh.rotation.y;
+                    boom.dx = Math.cos(boom.ang);
+                    boom.dz = Math.sin(boom.ang);
+                }
                 break;
         }
     }
