@@ -9,16 +9,32 @@ function init()
     canvas=document.getElementById("cvGame");
     engine=new BABYLON.Engine(canvas);
 
-
     scene=new BABYLON.Scene(engine);
-    light=new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0,1,0), scene);
+    light=new BABYLON.HemisphericLight("sun", new BABYLON.Vector3(0,1,0), scene);    
     ground=BABYLON.MeshBuilder.CreateGround("mGround", {width:1000,height:1000}, scene);   
     ground.material = new BABYLON.StandardMaterial("gMat", scene);
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
+    hero = BABYLON.MeshBuilder.CreateCylinder("cHero", {height:10,diameterBottom:10,diameterTop:0}, scene);
+    hero.material=new BABYLON.StandardMaterial("mHero", scene);
+    hero.material.diffuseColor=new BABYLON.Color3(0,0,1);
+    hero.position=new BABYLON.Vector3(-20, 5, 0);
+    hero.rotation.z=-Math.PI/2;
+
+    mons= BABYLON.MeshBuilder.CreateCylinder("cMons", {height:10,diameterBottom:10,diameterTop:0}, scene);
+    mons.material=new BABYLON.StandardMaterial("mMons", scene);
+    mons.material.diffuseColor=new BABYLON.Color3(1,0,0);
+    mons.position=new BABYLON.Vector3(20, 5, 0);
+    mons.rotation.z=-Math.PI/2;   
+
+    boom = BABYLON.MeshBuilder.CreateCylinder("cBoom", {height:10,diameterBottom:4,diameterTop:0}, scene);
+    boom.material=new BABYLON.StandardMaterial("mBoom", scene);
+    boom.material.diffuseColor=new BABYLON.Color3(1,.5,0);
+    boom.position=new BABYLON.Vector3(0,5,20);
+    boom.rotation.z=-Math.PI/2;
+
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
-
     engine.runRenderLoop(gameloop);
 }
 function gameloop()
