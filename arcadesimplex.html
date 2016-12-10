@@ -8,7 +8,7 @@ window.addEventListener("DOMContentLoaded", init);
 var things; // This will be a global array of all objects (things) in our game
 function init()
 {
-    things = new Array(); // create an empty array
+    things = new Array(); // creat an empty array
     
     canvas=document.getElementById("cvGame");
     engine=new BABYLON.Engine(canvas);
@@ -21,9 +21,13 @@ function init()
 
     hero = new ohero(scene);
     things.push(hero); // everytime you create an object, push it onto the list (array)
-    mons = new omons(hero, scene);
-    things.push(mons); // again, push any object if you want to see it
-    
+
+    maxmons = 3;
+    for (i = 0; i < maxmons; i++) {
+        mons = new omons(hero, scene);
+        things.push(mons); // again, push any object if you want to see it
+    }
+
     boom = null;
    
 
@@ -35,7 +39,7 @@ function init()
 function gameloop()
 {
     if (!gameover) {
-        // mons.move(); // THIS CODE IS NOT NEEDED NOW THAT OBJECTS ARE IN A LIST
+        // mons.move();
         //if (boom != null)
         //    boom.move();
         for (i = 0; i < things.length; i++) {
@@ -80,6 +84,16 @@ omons=function(h, scene) { // hero's object as input
             gameover=true;
             spWinLose.innerHTML="YOU DIED!";
         }
+        if (this.hit) {
+            this.monsindex = things.indexOf(this); // find mons in list
+            things.splice(this.monsindex, 1);       // remove mons from list
+            this.mesh.dispose();
+            maxmons = maxmons - 1; // game over condition is now here
+            if (maxmons == 0) {
+                gameover = true;
+                spWinLose.innerHTML = "YOU WIN";
+            }
+        }
     }
 
     this.draw = function () {
@@ -109,15 +123,25 @@ oboom = function (m, h, scene) { // pass the monster
             this.mesh.position.x += this.dx * this.spd;
             this.mesh.position.z += this.dz * this.spd;
         } else {
-            this.boomindex = things.indexOf(boom); // find boom in list
+            this.boomindex = things.indexOf(this); // find boom in list
             things.splice(this.boomindex, 1);       // remove from list
             boom = null;
             this.mesh.dispose();
         }
 
-        if (this.mesh.intersectsPoint(this.mons.position)) {
-            gameover = true;
-            spWinLose.innerHTML = "YOU WIN";
+        //if (this.mesh.intersectsPoint(this.mons.position)) {
+        //    gameover = true;
+        //    spWinLose.innerHTML = "YOU WIN";
+        //}
+        for (this.i = 0; this.i < things.length; this.i++) {
+            if ((things[this.i] instanceof omons) &&
+                this.mesh.intersectsPoint(things[this.i].mesh.position)) {
+                things[this.i].hit = true; // let the monster remove itself
+                this.boomindex = things.indexOf(this); // find boom in list
+                things.splice(this.boomindex, 1);       // remove from list
+                boom = null;
+                this.mesh.dispose();
+            }
         }
     }
 
