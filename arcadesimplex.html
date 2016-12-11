@@ -120,10 +120,12 @@ omons=function(h, scene) {
             hero.hit = true;
         }
         if (this.hit) {
+     
             this.monsindex = things.indexOf(this);
-            things.splice(this.monsindex, 1);     
+            things.splice(this.monsindex, 1);
+            explode_monster(this);     
             this.mesh.dispose();
-            maxmons = maxmons - 1; 
+            maxmons = maxmons - 1;             
         }
     }
 
@@ -236,6 +238,59 @@ ohero = function (scene) {
     window.addEventListener("keydown", this.move.bind(this)); // this is magic
 
     this.draw = function () {
+    }
+}
+
+oball = function (m, h, scene) {
+    this.mons = m.mesh; 
+    this.sx = m.mesh.position.x;  // note: explosions start at monster
+    this.sz = m.mesh.position.z;  //       unlike missiles at hero
+    
+    this.h = 5;
+    this.maxw = this.maxd = 10;
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cBall", { height: this.h, diameterBottom: this.h/2, diameterTop: this.h/2 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mBall", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, .5, 0);
+    this.mesh.position = new BABYLON.Vector3(20, this.h/2, 20);
+    this.mesh.rotation.z = -Math.PI / 2;
+    this.dx = this.dz = 0;
+    this.spd = this.rotspd = 1;
+    this.hit = this.dead = false;
+    this.mesh.computeWorldMatrix(true);
+
+    this.move = function () {
+        this.dist= Math.sqrt(
+                   Math.pow(this.mesh.position.x - this.sx, 2) 
+                 + Math.pow(this.mesh.position.z - this.sz, 2)); 
+        if (this.dist< this.maxd) {
+            this.mesh.position.x += this.dx * this.spd;
+            this.mesh.position.z += this.dz * this.spd;
+        } else {
+            this.ballindex = things.indexOf(this); 
+            things.splice(this.ballindex, 1);      
+            boom = null;
+            this.mesh.dispose();
+        }
+    }
+
+    this.draw = function () {
+    }
+}
+
+function explode_monster(mons)
+{
+    var a;
+
+    for (a=0;a<360;a+=45) {        
+        b = new oball(mons, hero, scene);
+        b.mesh.position.x = mons.mesh.position.x;
+        b.mesh.position.z = mons.mesh.position.z;
+        b.mesh.rotation.y = mons.mesh.rotation.y;
+        b.ang = a*Math.PI/180;
+        b.mesh.rotation.y=-b.ang;
+        b.dx = Math.cos(b.ang);
+        b.dz = Math.sin(b.ang);
+        things.push(b);
     }
 }
 </script>
