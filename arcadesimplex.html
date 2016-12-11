@@ -31,9 +31,6 @@
 window.addEventListener("DOMContentLoaded", init);
 
 var things;
-//
-// INITIALIZATION
-//
 function init()
 {
     things = new Array();
@@ -47,14 +44,10 @@ function init()
     ground.material = new BABYLON.StandardMaterial("gMat", scene);
     ground.material.diffuseColor=new BABYLON.Color3(0,.5,0);
 
-    hero = new ohero(scene);
-    things.push(hero);
-    maxmons = orgmons = 3; 
-    for (i = 0; i < maxmons; i++) {
-        mons = new omons(hero, scene);
-        things.push(mons); // again, push any object if you want to see it
-    }
-    boom = null;
+    hero=null;
+    orgmons = 1;
+    deadmon = 0;
+    init_level();
     
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -63,9 +56,33 @@ function init()
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-//
-// GAME LOOP
-//
+
+function init_level()
+{
+    for (var i=0;i<things.length;i++) { // clear previous level
+        tp=things.pop();
+        if (tp instanceof ohero)
+            things.push(tp); // push the hero back!
+        else
+            tp.mesh.dispose();
+    }
+
+    if (hero==null) {
+        hero = new ohero(scene);
+        things.push(hero);
+    }
+    
+    orgmons=orgmons*2;
+    maxmons = orgmons; 
+    for (i = 0; i < maxmons; i++) {
+        mons = new omons(hero, scene);
+        things.push(mons); // again, push any object if you want to see it
+    }
+    boom = null;
+    
+    gameover = false;
+}
+
 function gameloop()
 {
     if (!gameover) {
@@ -74,23 +91,22 @@ function gameloop()
                 things[i].move();
         }
 
-        spMons.innerHTML = (orgmons-maxmons);
+        spMons.innerHTML = deadmon;
         elapsed = Date.now() - starttime;
         spTime.innerHTML = (elapsed / 1000).toFixed(2);
 
         if (maxmons == 0 || hero.hit) {
             gameover = true;
-            if (maxmons == 0)
+            if (maxmons == 0) {
                 spWinLose.innerHTML = "YOU WIN";
-            else
+                init_level();
+            } else
                 spWinLose.innerHTML = "YOU LOSE";
         }        
     }
     scene.render();
 }
-//
-// OBJECTS
-//
+
 omons=function(h, scene) {
     this.hero = h.mesh;
     this.h = 10;
@@ -124,6 +140,7 @@ omons=function(h, scene) {
             things.splice(this.monsindex, 1);     
             this.mesh.dispose();
             maxmons = maxmons - 1; 
+            deadmon = deadmon + 1;
         }
     }
 
@@ -183,10 +200,10 @@ ohero = function (scene) {
     this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
     this.mesh.position = new BABYLON.Vector3(0, this.h/2, 0);
     this.mesh.rotation.z = -Math.PI / 2;
-    this.dx = this.dz = 0;
+    this.dx = herodz = 0;
     this.spd = 1;
     this.rotspd = 5;
-    this.hit = this.dead = false;
+    this.hit = herodead = false;
     this.mesh.computeWorldMatrix(true);
 
     this.move = function (event) {
