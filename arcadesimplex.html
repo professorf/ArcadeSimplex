@@ -31,9 +31,6 @@
 window.addEventListener("DOMContentLoaded", init);
 
 var things;
-//
-// INITIALIZATION
-//
 function init()
 {
     things = new Array();
@@ -63,9 +60,7 @@ function init()
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-//
-// GAME LOOP
-//
+
 function gameloop()
 {
     if (!gameover) {
@@ -88,11 +83,9 @@ function gameloop()
     }
     scene.render();
 }
-//
-// OBJECTS
-//
+
 omons=function(h, scene) {
-    this.hero = h.mesh;
+    this.hero = h;
     this.h = 10;
     this.maxw = this.maxd = 200;
     this.mesh = BABYLON.MeshBuilder.CreateCylinder("cMons", { height: this.h, diameterBottom: this.h, diameterTop: 0 }, scene);
@@ -104,19 +97,22 @@ omons=function(h, scene) {
     this.spd=0.05;
     this.rotspd=1;
     this.hit=this.dead=false;
+    this.boom=null; // the monster's current missile
+    this.close=50; // fires a missile after 50 units
     this.mesh.computeWorldMatrix(true);
 
     this.move = function () {
-        this.dx=this.hero.position.x-this.mesh.position.x;
-        this.dz=this.hero.position.z-this.mesh.position.z;
-        this.ang=Math.atan2(this.dz,this.dx);
-
+        this.dx=this.hero.mesh.position.x-this.mesh.position.x;
+        this.dz=this.hero.mesh.position.z-this.mesh.position.z;
+        this.dh=Math.sqrt(this.dx*this.dx+this.dz*this.dz); // calc dist
+ 
+        this.ang=Math.atan2(this.dz,this.dx); 
         this.dx = Math.cos(this.ang);
         this.dz = Math.sin(this.ang); 
         this.mesh.position.x+=this.dx*this.spd;
         this.mesh.position.z+=this.dz*this.spd; 
         this.mesh.rotation.y=-this.ang;
-        if (this.mesh.intersectsMesh(this.hero,true)) {
+        if (this.mesh.intersectsMesh(this.hero.mesh,true)) {
             hero.hit = true;
         }
         if (this.hit) {
@@ -125,6 +121,14 @@ omons=function(h, scene) {
             this.mesh.dispose();
             maxmons = maxmons - 1; 
         }
+        // fire a missile if close
+        if (this.dh<=this.close) {      // fire if close
+            if (this.boom==null) {      // & no missile
+                this.boom=new omboom(this, this.hero, scene); 
+                things.push(this.boom);
+            }
+        }
+
     }
 
     this.draw = function () {
@@ -148,7 +152,7 @@ oboom = function (m, h, scene) {
     this.hit = this.dead = false;
     this.mesh.computeWorldMatrix(true);
 
-    this.move = function () {
+    this.move=function() {
         if (Math.sqrt(Math.pow(this.mesh.position.x - this.sx, 2) + Math.pow(this.mesh.position.z - this.sz, 2)) < this.maxd) {
             this.mesh.position.x += this.dx * this.spd;
             this.mesh.position.z += this.dz * this.spd;
@@ -222,8 +226,8 @@ ohero = function (scene) {
                 if (boom == null) {
                     boom = new oboom(mons, hero, scene);
                     things.push(boom);
-                    boom.mesh.position.x = this.mesh.position.x;
-                    boom.mesh.position.z = this.mesh.position.z;
+                    boom.mesh.position.x = this.mesh.position.x; 
+                    boom.mesh.position.z = this.mesh.position.z; 
                     boom.mesh.rotation.y = this.mesh.rotation.y;
                     boom.ang = -boom.mesh.rotation.y;
                     boom.dx = Math.cos(boom.ang);
@@ -234,6 +238,57 @@ ohero = function (scene) {
     }
 
     window.addEventListener("keydown", this.move.bind(this)); // this is magic
+
+    this.draw = function () {
+    }
+}
+
+omboom = function (m, h, scene) {
+    this.source = m;
+    this.target = h; 
+    this.sx = this.source.mesh.position.x; 
+    this.sz = this.source.mesh.position.z;
+
+    this.h = 10;
+    this.maxw = this.maxd = 100;
+    this.mesh = BABYLON.MeshBuilder.CreateCylinder("cmBoom", { height: this.h, diameterBottom: this.h/2.5, diameterTop: 0 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mmBoom", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, .5, .5);
+    this.mesh.position = new BABYLON.Vector3(this.sx, this.h/2, this.sz);
+    this.mesh.rotation.z = -Math.PI / 2;
+    // now fix missile positions and rotations
+    this.mesh.position.x=m.mesh.position.x;
+    this.mesh.position.z=m.mesh.position.z;
+    this.mesh.rotation.y=m.mesh.rotation.y;    
+    this.ang=-m.mesh.rotation.y;
+    this.dx=Math.cos(this.ang);
+    this.dz=Math.sin(this.ang);
+
+    // this.dx = this.dz = 0;
+    this.spd = 0.25; // this is a good debug speed 
+    this.rotspd = 1;
+    this.hit = this.dead = false;
+    this.mesh.computeWorldMatrix(true);
+
+    this.move = function () {
+        if (Math.sqrt(Math.pow(this.mesh.position.x - this.sx, 2) + Math.pow(this.mesh.position.z - this.sz, 2)) < this.maxd) {
+            this.mesh.position.x += this.dx * this.spd;
+            this.mesh.position.z += this.dz * this.spd;
+        } else {
+            this.boomindex = things.indexOf(this); 
+            things.splice(this.boomindex, 1);      
+            this.source.boom = null;
+            this.mesh.dispose();
+        }
+
+        if (this.mesh.intersectsMesh(this.target.mesh)) {
+            this.target.hit = true; 
+            this.boomindex = things.indexOf(this); 
+            things.splice(this.boomindex, 1);      
+            this.boom = null;
+            this.mesh.dispose();
+        }
+    }
 
     this.draw = function () {
     }
