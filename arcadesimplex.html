@@ -3,37 +3,9 @@
 <head>
 <script src="babylon.max.js"></script>
 <script>
-/*
- * Copyright (c) Nick V. Flor, 2014-2017, All rights reserved
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * If you use this code for research, you must cite me in your paper references.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * This material is based partly upon work supported by the National Science Foundation (NSF)
- * under both ECCS - 1231046 and CMMI - 1635334. Any opinions, findings, and conclusions or 
- * recommendations expressed in this material are those of the author and do not necessarily
- * reflect the views of the NSF.
- */
-</script>
-<script>
 window.addEventListener("DOMContentLoaded", init);
 
 var things;
-//
-// INITIALIZATION
-//
 function init()
 {
     things = new Array();
@@ -55,6 +27,24 @@ function init()
         things.push(mons); // again, push any object if you want to see it
     }
     boom = null;
+
+    maxsensu=3; // I could loop, but I want to position senzu beans
+    
+    senzu = new osenzu(scene);
+    senzu.mesh.position.x=-50;
+    senzu.mesh.position.z= 50;
+    things.push(senzu);
+
+    senzu = new osenzu(scene);
+    senzu.mesh.position.x= 0;
+    senzu.mesh.position.z= 50;
+    things.push(senzu);
+
+    senzu = new osenzu(scene);
+    senzu.mesh.position.x= 50;
+    senzu.mesh.position.z= 50;
+    things.push(senzu);
+    
     
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
@@ -63,9 +53,7 @@ function init()
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-//
-// GAME LOOP
-//
+
 function gameloop()
 {
     if (!gameover) {
@@ -88,9 +76,7 @@ function gameloop()
     }
     scene.render();
 }
-//
-// OBJECTS
-//
+
 omons=function(h, scene) {
     this.hero = h.mesh;
     this.h = 10;
@@ -187,6 +173,7 @@ ohero = function (scene) {
     this.spd = 1;
     this.rotspd = 5;
     this.hit = this.dead = false;
+    this.senzu=0; // # of senzu beans for bullets
     this.mesh.computeWorldMatrix(true);
 
     this.move = function (event) {
@@ -220,14 +207,21 @@ ohero = function (scene) {
                 break;
             case 'Enter':
                 if (boom == null) {
-                    boom = new oboom(mons, hero, scene);
-                    things.push(boom);
-                    boom.mesh.position.x = this.mesh.position.x;
-                    boom.mesh.position.z = this.mesh.position.z;
-                    boom.mesh.rotation.y = this.mesh.rotation.y;
-                    boom.ang = -boom.mesh.rotation.y;
-                    boom.dx = Math.cos(boom.ang);
-                    boom.dz = Math.sin(boom.ang);
+                    if (this.senzu>0) {
+                        boom = new oboom(mons, hero, scene);
+                        things.push(boom);
+                        boom.mesh.position.x = this.mesh.position.x;
+                        boom.mesh.position.z = this.mesh.position.z;
+                        boom.mesh.rotation.y = this.mesh.rotation.y;
+                        boom.ang = -boom.mesh.rotation.y;
+                        boom.dx = Math.cos(boom.ang);
+                        boom.dz = Math.sin(boom.ang);
+                        this.senzu--;
+                        if (this.senzu==0) { // always add another sensu to world
+                            senzu=new osenzu(scene); // random position
+                            things.push(senzu);
+                        }
+                    }
                 }
                 break;
         }
@@ -237,6 +231,31 @@ ohero = function (scene) {
 
     this.draw = function () {
     }
+}
+
+osenzu=function(scene) {
+    this.h = 4;
+    this.maxw = this.maxd = 100;
+    this.mesh = BABYLON.MeshBuilder.CreateSphere("cBall", { diameter:4 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mBall", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 0);
+    this.mesh.position = new BABYLON.Vector3(Math.random()*this.maxw-this.maxw/2, this.h/2, Math.random()*this.maxd-this.maxd/2);
+    this.mesh.rotation.z = -Math.PI / 2;
+    this.dx = this.dz = 0;
+    this.spd = 1;
+    this.rotspd = 5;
+    this.hit = this.dead = false;
+    this.mesh.computeWorldMatrix(true);
+
+    this.move=function() {
+        if (this.mesh.intersectsMesh(hero.mesh)) { // remove if senzu intersects hero
+            this.senzuindex = things.indexOf(this); 
+            things.splice(this.senzuindex, 1);      
+            this.mesh.dispose();
+            hero.senzu++;
+        }
+    }
+    this.draw=function() {}
 }
 </script>
 <style>
