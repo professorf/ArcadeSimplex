@@ -49,7 +49,7 @@ function init()
 
     hero = new ohero(scene);
     things.push(hero);
-    maxmons = orgmons = 3; 
+    maxmons = orgmons = 20; 
     for (i = 0; i < maxmons; i++) {
         mons = new omons(hero, scene);
         things.push(mons); // again, push any object if you want to see it
@@ -120,10 +120,12 @@ omons=function(h, scene) {
             hero.hit = true;
         }
         if (this.hit) {
+     
             this.monsindex = things.indexOf(this);
-            things.splice(this.monsindex, 1);     
+            things.splice(this.monsindex, 1);
+            explode_monster(this);     
             this.mesh.dispose();
-            maxmons = maxmons - 1; 
+            maxmons = maxmons - 1;             
         }
     }
 
@@ -237,6 +239,29 @@ ohero = function (scene) {
 
     this.draw = function () {
     }
+}
+
+function explode_monster(mons)
+{
+    var a, dang, maxd;
+    
+    dang = 45; // dang*n=360; examples: 30,45,90,180
+    maxd = 25;
+    for (a=0;a<360;a+=dang) {        
+        b = new oboom(mons, hero, scene);
+        b.mesh.position.x = mons.mesh.position.x;
+        b.mesh.position.z = mons.mesh.position.z;
+        b.mesh.rotation.y = mons.mesh.rotation.y;
+        b.ang = a*Math.PI/180;
+        b.mesh.rotation.y=-b.ang;
+        b.dx = Math.cos(b.ang);
+        b.dz = Math.sin(b.ang);
+        b.sx=mons.mesh.position.x; // reset starting missile position to monster
+        b.sz=mons.mesh.position.z; 
+        b.maxd=maxd; // limit exploding missiles
+        things.push(b);
+    }
+
 }
 </script>
 <style>
