@@ -121,8 +121,8 @@ omons=function(h, scene) {
         }
         if (this.hit) {
             this.monsindex = things.indexOf(this);
-            things.splice(this.monsindex, 1);     
             this.mesh.dispose();
+            things.splice(this.monsindex, 1);     
             maxmons = maxmons - 1; 
         }
     }
@@ -220,6 +220,7 @@ ohero = function (scene) {
                 break;
             case 'Enter':
                 if (boom == null) {
+                    spread=15;
                     boom = new oboom(mons, hero, scene);
                     things.push(boom);
                     boom.mesh.position.x = this.mesh.position.x;
@@ -228,6 +229,27 @@ ohero = function (scene) {
                     boom.ang = -boom.mesh.rotation.y;
                     boom.dx = Math.cos(boom.ang);
                     boom.dz = Math.sin(boom.ang);
+
+                    boom = new oboom(mons, hero, scene);
+                    things.push(boom);
+                    boom.mesh.position.x = this.mesh.position.x;
+                    boom.mesh.position.z = this.mesh.position.z;
+                    boom.mesh.rotation.y = this.mesh.rotation.y;
+                    boom.ang = -(boom.mesh.rotation.y+spread*Math.PI/180);                     
+                    boom.dx = Math.cos(boom.ang);
+                    boom.dz = Math.sin(boom.ang);
+                    boom.mesh.rotation.y = -boom.ang;
+                   
+
+                    boom = new oboom(mons, hero, scene);
+                    things.push(boom);
+                    boom.mesh.position.x = this.mesh.position.x;
+                    boom.mesh.position.z = this.mesh.position.z;
+                    boom.mesh.rotation.y = this.mesh.rotation.y;
+                    boom.ang = -(boom.mesh.rotation.y-spread*Math.PI/180); 
+                    boom.dx = Math.cos(boom.ang);
+                    boom.dz = Math.sin(boom.ang);
+                    boom.mesh.rotation.y = -boom.ang;
                 }
                 break;
         }
