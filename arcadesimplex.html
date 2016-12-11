@@ -31,9 +31,6 @@
 window.addEventListener("DOMContentLoaded", init);
 
 var things;
-//
-// INITIALIZATION
-//
 function init()
 {
     things = new Array();
@@ -58,14 +55,13 @@ function init()
     
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
+    followcam=false; // follow behind cam
+    followtop=false; // follow top cam
 
     gameover = false;
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-//
-// GAME LOOP
-//
 function gameloop()
 {
     if (!gameover) {
@@ -78,6 +74,27 @@ function gameloop()
         elapsed = Date.now() - starttime;
         spTime.innerHTML = (elapsed / 1000).toFixed(2);
 
+        if (followtop) { // overrides follow behind cam
+         cameraheight=200;
+         camera.position.x=hero.mesh.position.x;
+         camera.position.z=hero.mesh.position.z;
+         camera.position.y=cameraheight;
+         spWinLose.innerHTML="TOP VIEW";
+
+        } 
+        else if (followcam) {
+         followdist=100;
+         followheight=20;
+         cameraang=-hero.mesh.rotation.y + Math.PI;
+         camera.position.x=followdist*Math.cos(cameraang)+hero.mesh.position.x;
+         camera.position.y=followheight;
+         camera.position.z=followdist*Math.sin(cameraang)+hero.mesh.position.z;
+         camera.rotation.y=hero.mesh.rotation.y+Math.PI/2;
+         camera.rotation.x=0;
+         spWinLose.innerHTML="FOLLOW CAM";
+        } else
+     spWinLose.innerHTML="SIMPLEX";
+
         if (maxmons == 0 || hero.hit) {
             gameover = true;
             if (maxmons == 0)
@@ -86,11 +103,10 @@ function gameloop()
                 spWinLose.innerHTML = "YOU LOSE";
         }        
     }
+
     scene.render();
 }
-//
-// OBJECTS
-//
+
 omons=function(h, scene) {
     this.hero = h.mesh;
     this.h = 10;
@@ -183,10 +199,10 @@ ohero = function (scene) {
     this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
     this.mesh.position = new BABYLON.Vector3(0, this.h/2, 0);
     this.mesh.rotation.z = -Math.PI / 2;
-    this.dx = this.dz = 0;
+    this.dx = herodz = 0;
     this.spd = 1;
     this.rotspd = 5;
-    this.hit = this.dead = false;
+    this.hit = herodead = false;
     this.mesh.computeWorldMatrix(true);
 
     this.move = function (event) {
@@ -214,9 +230,16 @@ ohero = function (scene) {
                 this.mesh.position.z -= this.dz * this.spd;
                 break;
             case 't':
-                camera.position.y = 200;
-                camera.position.x = camera.position.z = 0;
+                followtop=!followtop; // toggle follow top
+                cameraheight=200;
+                 camera.position.y = cameraheight;
+                //camera.position.x = camera.position.z = 0;
+                camera.position.x=hero.mesh.position.x;
+                camera.position.z=hero.mesh.position.z;
                 camera.rotation.x = Math.PI / 2;
+                break;
+            case 'f':
+                followcam=!followcam; // toggle folow behind cam
                 break;
             case 'Enter':
                 if (boom == null) {
