@@ -31,9 +31,6 @@
 window.addEventListener("DOMContentLoaded", init);
 
 var things;
-//
-// INITIALIZATION
-//
 function init()
 {
     things = new Array();
@@ -56,6 +53,14 @@ function init()
     }
     boom = null;
     
+    block = new oblock(scene);
+    block.mesh.position.x=50;block.mesh.position.z=50;
+    things.push(block);
+
+    block = new oblock(scene);
+    block.mesh.position.x=-50;block.mesh.position.z=50;
+    things.push(block);
+
     camera =new BABYLON.FreeCamera("mCam", new BABYLON.Vector3(0,6,-50), scene);
     camera.attachControl(canvas);
 
@@ -63,9 +68,7 @@ function init()
     starttime = Date.now();
     engine.runRenderLoop(gameloop);
 }
-//
-// GAME LOOP
-//
+
 function gameloop()
 {
     if (!gameover) {
@@ -88,9 +91,7 @@ function gameloop()
     }
     scene.render();
 }
-//
-// OBJECTS
-//
+
 omons=function(h, scene) {
     this.hero = h.mesh;
     this.h = 10;
@@ -118,6 +119,14 @@ omons=function(h, scene) {
         this.mesh.rotation.y=-this.ang;
         if (this.mesh.intersectsMesh(this.hero,true)) {
             hero.hit = true;
+        }
+        for (this.i=0;this.i<things.length;this.i++) {
+            if (things[this.i] instanceof oblock) {
+                if (this.mesh.intersectsMesh(things[this.i].mesh)) {
+                    this.mesh.position.x-=this.dx*this.spd; // back up
+                    this.mesh.position.z-=this.dz*this.spd;                     
+                }
+            }
         }
         if (this.hit) {
             this.monsindex = things.indexOf(this);
@@ -160,8 +169,8 @@ oboom = function (m, h, scene) {
         }
 
         for (this.i = 0; this.i < things.length; this.i++) {
-            if ((things[this.i] instanceof omons) &&
-                this.mesh.intersectsPoint(things[this.i].mesh.position)) {
+            if (((things[this.i] instanceof omons) || (things[this.i] instanceof oblock)) &&
+                this.mesh.intersectsMesh(things[this.i].mesh)) {
                 things[this.i].hit = true; 
                 this.boomindex = things.indexOf(this); 
                 things.splice(this.boomindex, 1);      
@@ -177,7 +186,7 @@ oboom = function (m, h, scene) {
 
 ohero = function (scene) {
     this.h = 10;
-    this.maxw = this.maxd = 100;
+    this.maxw = this.maxd = 1000;
     this.mesh = BABYLON.MeshBuilder.CreateCylinder("cHero", { height: this.h, diameterBottom: this.h, diameterTop: 0 }, scene);
     this.mesh.material = new BABYLON.StandardMaterial("mHero", scene);
     this.mesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
@@ -186,7 +195,7 @@ ohero = function (scene) {
     this.dx = this.dz = 0;
     this.spd = 1;
     this.rotspd = 5;
-    this.hit = this.dead = false;
+    this.hit = herodead = false;
     this.mesh.computeWorldMatrix(true);
 
     this.move = function (event) {
@@ -204,6 +213,13 @@ ohero = function (scene) {
                 this.dz = Math.sin(this.ang);
                 this.mesh.position.x += this.dx * this.spd;
                 this.mesh.position.z += this.dz * this.spd;
+                for (this.i=0;this.i<things.length;this.i++) {
+                    if (things[this.i] instanceof oblock 
+                    &&  this.mesh.intersectsMesh(things[this.i].mesh)) { // if hit block
+                        this.mesh.position.x -= this.dx * this.spd; // backup
+                        this.mesh.position.z -= this.dz * this.spd;                    
+                    }
+                }
                 break;
             case 's':
                 this.ang = -this.mesh.rotation.y;
@@ -212,6 +228,13 @@ ohero = function (scene) {
                 this.dz = Math.sin(this.ang);
                 this.mesh.position.x -= this.dx * this.spd;
                 this.mesh.position.z -= this.dz * this.spd;
+                for (this.i=0;this.i<things.length;this.i++) {
+                    if (things[this.i] instanceof oblock 
+                    &&  this.mesh.intersectsMesh(things[this.i].mesh)) { // if hit block
+                        this.mesh.position.x += this.dx * this.spd; // backup
+                        this.mesh.position.z += this.dz * this.spd;                    
+                    }
+                }
                 break;
             case 't':
                 camera.position.y = 200;
@@ -238,6 +261,25 @@ ohero = function (scene) {
     this.draw = function () {
     }
 }
+
+oblock=function (scene)
+{
+    this.h = 20;
+    this.maxw = this.maxd = 1000;
+    this.mesh = BABYLON.MeshBuilder.CreateBox("cBox", { height: this.h, width: this.h, depth: this.h }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("mHBox", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, .5, 0);
+    this.mesh.position = new BABYLON.Vector3(this.maxw*Math.random()-this.maxw/2, this.h/2, this.maxd*Math.random()-this.maxd/2);
+    this.mesh.rotation.z = -Math.PI / 2;
+    this.dx = this.dz = 0;
+    this.spd = 1;
+    this.rotspd = 5;
+    this.hit = herodead = false;
+    this.mesh.computeWorldMatrix(true);
+    this.move=function() {}
+    this.draw=function() {}
+}
+
 </script>
 <style>
 body    {width:100%; height:100%; padding:0; margin:0; background:red;}
