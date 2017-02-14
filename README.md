@@ -12,7 +12,7 @@ There are 9 branches:
 3. VObstacles -- block obstacles, which stop monsters, bullets, and the hero
 4. VMonstersFiring -- monsters firing when the hero gets too close
 5. VPowerPellets -- the picking up of pellets before firing
-6. VThreeMissiles -- firing three missies at once
+6. VThreeMissiles -- firing three missiles at once
 7. VSplitHitMissiles -- monsters exploding into richocheting missiles
 8. VNormalExplosion -- monsters exploding before when hit
 9. VInfiniteMonsters -- after clearing a level, the number of monsters doubles; this continues until the player dies 
