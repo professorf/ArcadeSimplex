@@ -7,19 +7,14 @@ tags:
   - trigonometry
   - 3d videogames
 authors:
-  - name: Nick V. Flor^[Custom footnotes for e.g. denoting who the corresponding author is can be included like this.]
+  - name: Nick V. Flor^[Corresponding author]
     orcid: 0000-0002-5162-9277
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
+    affiliation: 1 # (Multiple affiliations must be quoted)
 affiliations:
  - name: Nick V. Flor, Associate Professor, University of New Mexico
    index: 1
 date: 01 May 2021
 bibliography: paper.bib
-
-# Optional fields if submitting to a AAS journal too, see this blog post:
-# https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
