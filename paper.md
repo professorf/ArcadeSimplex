@@ -93,7 +93,9 @@ Figure sizes can be customized by adding an optional second parameter:
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+This material is based partly upon work supported by the National Science Foundation (NSF)
+under both ECCS - 1231046 and CMMI - 1635334. Any opinions, findings, and conclusions or 
+recommendations expressed in this material are those of the author and do not necessarily
+reflect the views of the NSF.
 
 # References
