@@ -17,30 +17,39 @@ date: 01 May 2021
 bibliography: paper.bib
 ---
 
+# Background
+
+In the Fall of 2017, as part of the Freshman Learning Communities program at the University of New Mexico, I taught a class to incoming freshmen on Internet Memes & Digital Media (MGMT190, hereafter “Memes Class”) in the business school, which was paired with Computer Programming Fundamentals (CS151L, hereafter “Programming Class”) in the engineering school.
+
+The goal of the paired classes was to get students to apply the concepts in Programming Class to Memes Class. The first week of class, I asked students how they would like to apply the programming skills they learned. An overwhelming majority indicated they would like to try and create a new kind of meme based on simple video games. 
+
+`ArcadeSimplex` was the codebase I created to help students — with neither programming nor game development experience — to develop their video game memes.
+
 # Summary
 
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+A 3D Video Game Learning Tutorial Based on ProfessorF's Arcade Simplex Theory
+
+This is teaching code. The goal is not _efficient_ code, per se, but _easy-to-understand_ code. All game pieces are based on simple polygons, but it is easy to replace them with more sophisticated models. The use of polygons, however, allows game programmers to focus on learning the basics of the code, rather than being distracted by model code. 
+
+The master contains the base code.  Each branch is a variation that builds functionality on top of the base code. 
+
+There are 9 branches:
+
+1. ArcadeSimplexBase -- this is always merged into the master, and contains bug fixes to the main code
+2. VFollowCam -- a follow-behind and follow--top camera
+3. VObstacles -- block obstacles, which stop monsters, bullets, and the hero
+4. VMonstersFiring -- monsters firing when the hero gets too close
+5. VPowerPellets -- the picking up of pellets before firing
+6. VThreeMissiles -- firing three missiles at once
+7. VSplitHitMissiles -- monsters exploding into richocheting missiles
+8. VNormalExplosion -- monsters exploding before when hit
+9. VInfiniteMonsters -- after clearing a level, the number of monsters doubles; this continues until the player dies 
 
 # Statement of need
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
+Learning computer programming is notoriously difficult but a motivated student will usually succeed despite bad conditions in the teaching or in the tools that constitute the learning environment (Brito and de Sá-Soares, 2014).
+
+One way to motivate students is to have them apply the material to solve problems they are interested in, rather than the typical abstract problems, e.g., the rainfall problem (Johnson and Soloway, 1985), given to intro to programming students:
 
 `Gala` was designed to be used by both astronomical researchers and by
 students in courses on gravitational dynamics or astronomy. It has already been
