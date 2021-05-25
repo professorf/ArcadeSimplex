@@ -1,6 +1,9 @@
 # ArcadeSimplex
 A codebase for learning how to create 3D video games on Linux, Mac, and Windows — Based on ProfessorF's Arcade Simplex Theory.
 
+## Issues and Requests
+Click [here](https://github.com/professorf/ArcadeSimplex/issues) to submit issues and requests.
+
 ## Introduction
 ArcadeSimple is a codebase for learning how to create 3D games using the CAT strategy (Copying And Tweaking). The codebase assumes both minimal math knowledge and minimal software requirements. To create their own games learners need only an understanding of basic alegbra, a text editor, a web browser, and the Babylon.js 3d library. The _git_ app is also recommended for checking out different codebase branches. 
 
