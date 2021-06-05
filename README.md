@@ -32,13 +32,13 @@ ArcadeSimplex requires a web browser, a text editor, and the Babylon.js 3D libra
 * [Git](https://git-scm.com/downloads) - A version control manager. This app isn't technically required but it makes check out the different codebase branches very easy, as well as help you manage your game development as you add features and your game becomes more complex.
 
 ## Getting Started
-* [](Tutorial: Install software, setup, and test ArcadeSimplex)
-* [](Tutorial: Check out branche, modify, test)
+* [Tutorial: Install software, setup, and test ArcadeSimplex](getting-started.md)
+* [Tutorial: Check out branches and testing](check-test-branch.md)
 
-## Examples
+## Branches
 
 1. ![ArcadeSimplexBase]() -- this is always merged into the master, and contains bug fixes to the main code
-2. ![VFollowCam]() -- a follow-behind and follow--top camera
+2. ![VFollowCam]() -- a follow-behind and follow-top camera
 3. ![VObstacles]() -- block obstacles, which stop monsters, bullets, and the hero
 4. ![VMonstersFiring]() -- monsters firing when the hero gets too close
 5. ![VPowerPellets]() -- the picking up of pellets before firing
