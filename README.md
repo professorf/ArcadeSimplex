@@ -1,5 +1,15 @@
 # ArcadeSimplex
+Nick V. Flor, PhD<br>
+_Research Analytics & Virtual Environments Lab<br>
+University of New Mexico_
+
+<br>
 A codebase for learning how to create 3D video games on Linux, Mac, and Windows — Based on ProfessorF's Arcade Simplex Theory.
+
+<table style="width:100%"><tr>
+<td><img src="VSplitHitMissiles.png" style="width:100%"></td>
+<td><img src="VSplitHitMissiles-Top.png" style="width:100%"></td>
+</tr><table>
 
 ## Issues and Requests
 Click [here](https://github.com/professorf/ArcadeSimplex/issues) to submit issues and requests.
@@ -42,3 +52,5 @@ ArcadeSimplex requires a web browser, a text editor, and the Babylon.js 3D libra
 * [Tutorial: Getting Started](https://github.com/professorf/ArcadeSimplex/wiki/Getting-Started) (recommended setup for learning to write games)
 * [Tutorial: Checking out Branches](https://github.com/professorf/ArcadeSimplex/wiki/Checkout-Branch)
 
+## Acknowledgments
+This material is based partly upon work supported by the National Science Foundation (NSF) under both ECCS - 1231046 and CMMI - 1635334. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author and do not necessarily reflect the views of the NSF.
