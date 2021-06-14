@@ -31,19 +31,14 @@ ArcadeSimplex requires a web browser, a text editor, and the Babylon.js 3D libra
 * [Visual Studio Code](https://code.visualstudio.com/download) - Visual Studio Code is the recommended text editor. Any editor will work (you can even use Notepad!), but Visual Studio Code is a lightweight editor with very nice syntax highlighting and the ability to debug ArcadeSimplex using Firefox.
 * [Git](https://git-scm.com/downloads) - A version control manager. This app isn't technically required but it makes check out the different codebase branches very easy, as well as help you manage your game development as you add features and your game becomes more complex.
 
-## Getting Started
-* [Tutorial: Install software, setup, and test ArcadeSimplex](getting-started.md)
-* [Tutorial: Check out branches and testing](check-test-branch.md)
 
-## Branches
+## Quick Start 
+(_if you just want to play the game_)
+* [Tutorial: Quick Setup](https://github.com/professorf/ArcadeSimplex/wiki) (recommended setup if you just want to play the game)
 
-1. ![ArcadeSimplexBase]() -- this is always merged into the master, and contains bug fixes to the main code
-2. ![VFollowCam]() -- a follow-behind and follow-top camera
-3. ![VObstacles]() -- block obstacles, which stop monsters, bullets, and the hero
-4. ![VMonstersFiring]() -- monsters firing when the hero gets too close
-5. ![VPowerPellets]() -- the picking up of pellets before firing
-6. ![VThreeMissiles]() -- firing three missiles at once
-7. ![VSplitHitMissiles]() -- monsters exploding into richocheting missiles
-8. ![VNormalExplosion]() -- monsters exploding before when hit
-9. ![VInfiniteMonsters]() -- after clearing a level, the number of monsters doubles; this continues until the player dies 
+
+## Recommended Setup
+(_if you want to learn how to write games_)
+* [Tutorial: Getting Started](https://github.com/professorf/ArcadeSimplex/wiki/Getting-Started) (recommended setup for learning to write games)
+* [Tutorial: Checking out Branches](https://github.com/professorf/ArcadeSimplex/wiki/Checkout-Branch)
 
