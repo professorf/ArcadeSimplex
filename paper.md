@@ -19,11 +19,15 @@ bibliography: paper.bib
 
 # Background
 
-In the Fall of 2017, as part of the Freshman Learning Communities program at the University of New Mexico, I taught a class to incoming freshmen on Internet Memes & Digital Media (MGMT190, hereafter “Memes Class”) in the business school, which was paired with Computer Programming Fundamentals (CS151L, hereafter “Programming Class”) in the engineering school.
+In the Fall of 2017, as part of the Freshmen Learning Communities program at the University of New Mexico, I taught a class on Internet Memes & Digital Media in the business school (MGMT190, “Memes Class”). Memes class was paired with Computer Programming Fundamentals in the engineering school (CS151L, “Programming Class”). Both classes contained incoming freshmen only.
 
-The goal of the paired classes was to get students to apply the concepts in Programming Class to Memes Class. The first week of class, I asked students how they would like to apply the programming skills they learned. An overwhelming majority indicated they would like to try and create a new kind of meme based on simple video games. 
+In paired classes, students apply the concepts from one class to another class. In this case, they apply programming  concepts to the development of memes. The hope is that students will acquire a deeper understanding of programming by applying what they learn to create memes.  
 
-`ArcadeSimplex` was the codebase I created to help students — with neither programming nor game development experience — to develop their video game memes.
+The first week of class, I asked students how they would like to apply the programming skills they learned towards creading memes. Now, there are many different kinds of memes, the most popular of which are image macros and funny/shocking videos. But a majority of the students indicated they would like to try something different—to create memes based on simple video games. 
+
+The main issue was that these students were introductory programming students and did not have the programming skills necessary to create games from scratch. They were adept, however, at taking code and modifying it. 
+
+Thus, I created `ArcadeSimplex` a codebase to help students — with neither programming nor game development experience — to develop video game memes using a copy and tweak strategy.
 
 # Summary
 
@@ -31,7 +35,7 @@ A 3D Video Game Learning Tutorial Based on ProfessorF's Arcade Simplex Theory
 
 This is teaching code. The goal is not _efficient_ code, per se, but _easy-to-understand_ code. All game pieces are based on simple polygons, but it is easy to replace them with more sophisticated models. The use of polygons, however, allows game programmers to focus on learning the basics of the code, rather than being distracted by model code. 
 
-The master contains the base code.  Each branch is a variation that builds functionality on top of the base code. 
+The master branch contains the base code.  Each branch is a variation that builds functionality on top of the base code. 
 
 There are 9 branches:
 
@@ -49,7 +53,7 @@ There are 9 branches:
 
 Learning computer programming is notoriously difficult but a motivated student will usually succeed despite bad conditions in the teaching or in the tools that constitute the learning environment (Brito and de Sá-Soares, 2014).
 
-One way to motivate students is to have them apply the material to solve problems they are interested in, rather than the typical abstract problems, e.g., the rainfall problem (Johnson and Soloway, 1985), given to intro to programming students:
+One way to motivate students is to have them apply the material to solve problems they are interested in, rather than the typical abstract problems given to introductory programming student, e.g., the rainfall problem (Johnson and Soloway, 1985).
 
 `Gala` was designed to be used by both astronomical researchers and by
 students in courses on gravitational dynamics or astronomy. It has already been
