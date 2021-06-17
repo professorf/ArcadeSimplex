@@ -49,6 +49,8 @@ There are 9 branches:
 8. VNormalExplosion -- monsters exploding before when hit
 9. VInfiniteMonsters -- after clearing a level, the number of monsters doubles; this continues until the player dies 
 
+`ArcadeSimplex` is the codebase for two publications @Flor:2017 and @Flor:2015.
+
 # Statement of need
 
 Learning computer programming is notoriously difficult but a motivated student will usually succeed despite bad conditions in the teaching or in the tools that constitute the learning environment (Brito and de Sá-Soares, 2014).
