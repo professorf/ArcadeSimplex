@@ -1,5 +1,5 @@
 ---
-title: 'Arcade Simplex: Applying Trigonometry to 3D Arcade Video Games'
+title: 'Arcade Simplex: A Codebase for Learning to Program 3D Arcade Video Games'
 tags:
   - javascript
   - babylon.js
@@ -16,18 +16,6 @@ affiliations:
 date: 01 May 2021
 bibliography: paper.bib
 ---
-
-# Background
-
-In the Fall of 2017, as part of the Freshmen Learning Communities program at the University of New Mexico, I taught a class on Internet Memes & Digital Media in the business school (MGMT190, “Memes Class”). Memes class was paired with Computer Programming Fundamentals in the engineering school (CS151L, “Programming Class”). Both classes contained incoming freshmen only.
-
-In paired classes, students apply the concepts from one class to another class. In this case, they apply programming  concepts to the development of memes. The hope is that students will acquire a deeper understanding of programming by applying what they learn to create memes.  
-
-The first week of class, I asked students how they would like to apply the programming skills they learned towards creading memes. Now, there are many different kinds of memes, the most popular of which are image macros and funny/shocking videos. But a majority of the students indicated they would like to try something different—to create memes based on simple video games. 
-
-The main issue was that these students were introductory programming students and did not have the programming skills necessary to create games from scratch. They were adept, however, at taking code and modifying it. 
-
-Thus, I created `ArcadeSimplex` a codebase to help students — with neither programming nor game development experience — to develop video game memes using a copy and tweak strategy.
 
 # Summary
 
@@ -49,62 +37,25 @@ There are 9 branches:
 8. VNormalExplosion -- monsters exploding before when hit
 9. VInfiniteMonsters -- after clearing a level, the number of monsters doubles; this continues until the player dies 
 
-`ArcadeSimplex` is the codebase for two publications @Flor:2017 and @Flor:2015.
+`ArcadeSimplex` was used as the codebase for two publications [@Flor:2017a; @Flor:2017b] and @Flor:2015.
 
 # Statement of need
 
-Learning computer programming is notoriously difficult but a motivated student will usually succeed despite bad conditions in the teaching or in the tools that constitute the learning environment (Brito and de Sá-Soares, 2014).
+Learning computer programming is notoriously difficult but a motivated student will usually succeed despite bad conditions in the teaching or in the tools that constitute the learning environment [@Brito:2014].
 
-One way to motivate students is to have them apply the material to solve problems they are interested in, rather than the typical abstract problems given to introductory programming student, e.g., the rainfall problem (Johnson and Soloway, 1985).
+One way to motivate students is to have them apply the material to solve problems they are interested in, rather than the typical abstract problems given to introductory programming student, e.g., the rainfall problem [@Johnson:1985].
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+# Teaching Application
 
-# Mathematics
+In the Fall of 2017, as part of the Freshmen Learning Communities program at the University of New Mexico, I taught a class on Internet Memes & Digital Media in the business school (MGMT190, “Memes Class”). Memes class was paired with Computer Programming Fundamentals in the engineering school (CS151L, “Programming Class”). Both classes contained incoming freshmen only.
 
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
+In paired classes, students apply the concepts from one class to another class. In this case, they apply programming  concepts to the development of memes. The hope is that students will acquire a deeper understanding of programming by applying what they learn to create memes.  
 
-Double dollars make self-standing equations:
+The first week of class, I asked students how they would like to apply the programming skills they learned towards creading memes. Now, there are many different kinds of memes, the most popular of which are image macros and funny/shocking videos. But a majority of the students indicated they would like to try something different—to create memes based on simple video games. 
 
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
+The main issue was that these students were introductory programming students and did not have the programming skills necessary to create games from scratch. They were adept, however, at taking code and modifying it. 
 
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
-
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
-
-# Figures
-
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
-
-Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+Thus, I created `ArcadeSimplex` a codebase to help students — with neither programming nor game development experience — to develop video game memes using a copy and tweak strategy.
 
 # Acknowledgements
 
