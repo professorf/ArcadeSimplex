@@ -65,8 +65,8 @@ Arcade Simplex uses only basic trigonometry, which the following diagram summari
 
 _Distance Formula_
 
-Given a player avatar at \(ax, ay\) and an object (e.g., a monster) at \(ox, oy\), the distance, \(D\), between them is determined by first calculating the deltas, \(dx=ox-ax\), and
-\(dy=oy-ay\), and then using the distance formula: \(D=sqrt{dx^2+dy^2}\).
+Given a player avatar at $ax, ay$ and an object (e.g., a monster) at $ox, oy$, the distance, $D$, between them is determined by first calculating the deltas, $dx=ox-ax$, and
+$dy=oy-ay$, and then using the distance formula: $D=\sqrt{dx^2+dy^2}$.
 
 Arcade Simplex uses the distance formula to determine collisions between missiles and monsters, and between monsters and players.
 
