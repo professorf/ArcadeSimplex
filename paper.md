@@ -80,8 +80,8 @@ Arcade Simplex uses arctangent to determine how to orient objects to the player 
 _Alternative Formulas_
 \[dx=Dcos{A}\]
 \[dy=Dsin{A}]\]
-\[A=arccos{\frac{dx}{D}}\]
-\[A=arcsin{\frac{dy}{D}}\]
+\[A=arccos{frac{dx}{D}}\]
+\[A=arcsin{frac{dy}{D}}\]
 
 
 # Acknowledgements
