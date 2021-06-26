@@ -73,7 +73,7 @@ Arcade Simplex uses the distance formula to determine collisions between missile
 _Orientation Formula_
 
  first calculating the deltas, \(dx=ox-ax\), and
-\(dy=oy-ay\), and then using the orientation formula: \(A=\atan{dx^2+dy^2}\).
+\(dy=oy-ay\), and then using the orientation formula: \(A=\arctan{dx^2+dy^2}\).
 
 Arcade Simplex uses arctangent to determine how to orient objects to the player or vice versa.
 
