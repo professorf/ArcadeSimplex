@@ -19,9 +19,9 @@ bibliography: paper.bib
 
 # Summary
 
-A 3D Video Game Learning Tutorial Based on ProfessorF's Arcade Simplex Theory
+Arcade Simplex is a an open-source codebase for learning-by-example how to create 3d video games. The target users are teachers of digital media classes or introductory programming classes, who want to incorporate a game programming module into their lesson plans. 
 
-This is teaching code. The goal is not _efficient_ code, per se, but _easy-to-understand_ code. All game pieces are based on simple polygons, but it is easy to replace them with more sophisticated models. The use of polygons, however, allows game programmers to focus on learning the basics of the code, rather than being distracted by model code. 
+This is teaching code. The goal is not _efficient_ code, per se, but _easy-to-understand_ code. All game pieces are based on simple polygons, but it is easy to replace them with more sophisticated models. The use of polygons, however, allows game programmers to focus on learning the basics of the code, rather than being distracted by 3d modeling & animation code. 
 
 The master branch contains the base code.  Each branch is a variation that builds functionality on top of the base code. 
 
@@ -55,7 +55,34 @@ The first week of class, I asked students how they would like to apply the progr
 
 The main issue was that these students were introductory programming students and did not have the programming skills necessary to create games from scratch. They were adept, however, at taking code and modifying it. 
 
-Thus, I created `ArcadeSimplex` a codebase to help students — with neither programming nor game development experience — to develop video game memes using a copy and tweak strategy.
+Thus, I created `ArcadeSimplex` a codebase to help students — with neither programming nor game development experience — to develop video game memes using a copy and tweak strategy. 
+
+# Math
+
+Arcade Simplex uses only basic trigonometry, which the following diagram summarizes:
+
+![Arcade Simplex Math](Arcade-Simplex-Math.png)
+
+_Distance Formula_
+
+Given a player avatar at \(ax, ay\) and an object (e.g., a monster) at \(ox, oy\), the distance, \(D\), between them is determined by first calculating the deltas, \(dx=ox-ax\), and
+\(dy=oy-ay\), and then using the distance formula: \[D=\sqrt{dx^2+dy^2}\].
+
+Arcade Simplex uses the distance formula to determine collisions between missiles and monsters, and between monsters and players.
+
+_Orientation Formula_
+
+ first calculating the deltas, \(dx=ox-ax\), and
+\(dy=oy-ay\), and then using the orientation formula: \[A=\atan{dx^2+dy^2}\].
+
+Arcade Simplex uses arctangent to determine how to orient objects to the player or vice versa.
+
+_Alternative Formulas_
+\[dx=D\cos{A}\]
+\[dy=D\sin{A}]\]
+\[A=arccos{\frac{dx}{D}}\]
+\[A=arcsin{\frac{dy}{D}}\]
+
 
 # Acknowledgements
 
