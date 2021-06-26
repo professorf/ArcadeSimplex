@@ -66,7 +66,7 @@ Arcade Simplex uses only basic trigonometry, which the following diagram summari
 _Distance Formula_
 
 Given a player avatar at $ax, ay$ and an object (e.g., a monster) at $ox, oy$, the distance, $D$, between them is determined by first calculating the deltas, $dx=ox-ax$, and
-$dy=oy-ay$, and then using the distance formula:<br>
+$dy=oy-ay$, and then using the distance formula:
 $D=\sqrt{dx^2+dy^2}$.
 
 Arcade Simplex uses the distance formula to determine collisions between missiles and monsters, and between monsters and players.
@@ -79,10 +79,12 @@ $dy=oy-ay$, and then using the orientation formula: $A=\arctan{dx^2+dy^2}$.
 Arcade Simplex uses arctangent to determine how to orient objects to the player or vice versa.
 
 _Alternative Formulas_
-$dx=D\cos{A}$<br>
-$dy=D\sin{A}]$<br>
-$A=\arccos{\frac{dx}{D}}$<br>
-$A=\arcsin{\frac{dy}{D}}$
+
+Alternative formuals for Angle of Orientation and Deltas
+* $A=\arccos{\frac{dx}{D}}$  
+* $A=\arcsin{\frac{dy}{D}}$ 
+* $dx=D\cos{A}$ 
+* $dy=D\sin{A}$ 
 
 
 # Acknowledgements
